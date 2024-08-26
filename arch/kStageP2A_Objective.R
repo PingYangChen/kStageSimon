@@ -1,5 +1,4 @@
 library(Rcpp)
-library(RcppArmadillo)
 sourceCpp('kstagecli/kStageP2A.cpp')
 
 ### ---------------------------------------------------------------------------
@@ -25,7 +24,7 @@ kStageMinMaxObj <- function(particle, nMin, cliRequirement = NULL) {
   nMax <- particle[1]
   nPolarized <- particle[2:nStage]
   rProportion <- particle[(nStage + 1):length(particle)]
-  
+
   result <- kStageFreqCrit(nPolarized, rProportion, nMax, nMin, cliRequirement)
   # Return the objective function value under null hypothesis 
   if ((result$t1e <= t1eThres) & (result$t2e <= t2eThres)) {
@@ -73,7 +72,7 @@ kStageOptimObj <- function(particle, nMin, cliRequirement = NULL) {
 ###  the input PSO particle 
 ### ---------------------------------------------------------------------------
 kStageFreqCrit <- function(nPolarized, rProportion, nMax, nMin, cliRequirement = NULL) {
-  
+
   if (is.null(cliRequirement)) {
     p0 <- 0.2
     p1 <- 0.4
