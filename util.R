@@ -4,11 +4,17 @@
 ###  proportions vector to the readable stopping cutoff sizes at each
 ###  stage of the trial 
 ### ---------------------------------------------------------------------------
-get_cutoff <- function(rProportion, nseq) {
+get_cutoff <- function(rProportion, nseq, min_r = 0) {
   n_stage <- length(nseq)
+  stopifnot( (length(min_r) %in% c(1, n_stage)) ) #"length of 'min_r' should be 1 or 'n_stage'"
   nEachInterim <- c(nseq[1], diff(nseq))
-  rEachInterim <- rProportion*nEachInterim
-  cutoffs <- round(cumsum(rEachInterim))
+  nEachInterimAdj <- nEachInterim - min_r
+  if (any(nEachInterimAdj < 0)) {
+    print(nEachInterimAdj) 
+  }
+  stopifnot(all(nEachInterimAdj >= 0))
+  rEachInterim <- round(rProportion*nEachInterimAdj) + min_r
+  cutoffs <- cumsum(rEachInterim)
   return(cutoffs)
 }
 
@@ -31,7 +37,7 @@ get_cohort <- function(w_polarized, n_stage, max_n = 50, min_n = 0) {
     fixed_sample <- min_n
   }
   if (assigned_sample < 0) { stop("min_n is too large") }
-  nobs.seq = round(cumsum(wt*assigned_sample + fixed_sample))
+  nobs.seq = cumsum(round(wt*assigned_sample + fixed_sample))
   return(nobs.seq)
 }
 

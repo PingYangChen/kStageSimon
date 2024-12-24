@@ -5,7 +5,7 @@ sourceCpp('kstagecli/kStageP2A.cpp')
 ### ---------------------------------------------------------------------------
 ### The objective function of the K-stage minimax design
 ### ---------------------------------------------------------------------------
-kStageMinMaxObj <- function(particle, nMin, cliRequirement = NULL) {
+kStageMinMaxObj <- function(particle, nMin, rMin = 0, cliRequirement = NULL) {
   # particle      : vector of the form (nMax, nPolarized, rProportion) with sizes (1, nStage - 1, nStage)
   # nMin          : integer, minimal sample size at each stage
   # cliRequirement: list, requirements of the trial including p0, p1, alpha and beta
@@ -26,7 +26,7 @@ kStageMinMaxObj <- function(particle, nMin, cliRequirement = NULL) {
   nPolarized <- particle[2:nStage]
   rProportion <- particle[(nStage + 1):length(particle)]
   
-  result <- kStageFreqCrit(nPolarized, rProportion, nMax, nMin, cliRequirement)
+  result <- kStageFreqCrit(nPolarized, rProportion, nMax, nMin, rMin, cliRequirement)
   # Return the objective function value under null hypothesis 
   if ((result$t1e <= t1eThres) & (result$t2e <= t2eThres)) {
     return(result$en/nMax + nMax)
@@ -38,7 +38,7 @@ kStageMinMaxObj <- function(particle, nMin, cliRequirement = NULL) {
 ### ---------------------------------------------------------------------------
 ### The objective function of the K-stage optimal design
 ### ---------------------------------------------------------------------------
-kStageOptimObj <- function(particle, nMin, cliRequirement = NULL) {
+kStageOptimObj <- function(particle, nMin, rMin = 0, cliRequirement = NULL) {
   # particle      : vector of the form (nMax, nPolarized, rProportion) with sizes (1, nStage - 1, nStage)
   # nMin          : integer, minimal sample size at each stage
   # cliRequirement: list, requirements of the trial including p0, p1, alpha and beta
@@ -59,7 +59,7 @@ kStageOptimObj <- function(particle, nMin, cliRequirement = NULL) {
   nPolarized <- particle[2:nStage]
   rProportion <- particle[(nStage + 1):length(particle)]
   #
-  result <- kStageFreqCrit(nPolarized, rProportion, nMax, nMin, cliRequirement)
+  result <- kStageFreqCrit(nPolarized, rProportion, nMax, nMin, rMin, cliRequirement)
   # Return the expected sample size under null hypothesis 
   if ((result$t1e <= t1eThres) & (result$t2e <= t2eThres)) {
     return(result$en)
@@ -72,7 +72,7 @@ kStageOptimObj <- function(particle, nMin, cliRequirement = NULL) {
 ### The function computing the expected sample size under null hypothesis for 
 ###  the input PSO particle 
 ### ---------------------------------------------------------------------------
-kStageFreqCrit <- function(nPolarized, rProportion, nMax, nMin, cliRequirement = NULL) {
+kStageFreqCrit <- function(nPolarized, rProportion, nMax, nMin, rMin = 0, cliRequirement = NULL) {
   
   if (is.null(cliRequirement)) {
     p0 <- 0.2
@@ -88,7 +88,7 @@ kStageFreqCrit <- function(nPolarized, rProportion, nMax, nMin, cliRequirement =
   
   nStage <- length(nPolarized) + 1
   nseq <- get_cohort(nPolarized, nStage, nMax, nMin)
-  rseq <- get_cutoff(rProportion, nseq)
+  rseq <- get_cutoff(rProportion, nseq, rMin)
   #
   return(kStageP2A_Cpp(p0, p1, nseq, rseq))
 }

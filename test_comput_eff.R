@@ -66,24 +66,27 @@ optimRes$par
 
 nEachInterim <- c(5, 10, 20, 35, 50)
 rseq <- as.integer(nEachInterim/2)
-
+ntry <- 5000
 system.time({
-  for (i in 1:100) {
+  for (i in 1:ntry) {
     pet_recursive(1, rep(0, 1), nEachInterim[1:1], rseq[1:1], nEachInterim[2], rseq[2], 0.2, 2)  
   }
 })[3]
+
 system.time({
-  for (i in 1:100) {
+  for (i in 1:ntry) {
     pet_recursive(1, rep(0, 2), nEachInterim[1:2], rseq[1:2], nEachInterim[3], rseq[3], 0.2, 3)
   }
 })[3]
+
 system.time({
-  for (i in 1:100) {
+  for (i in 1:ntry) {
     pet_recursive(1, rep(0, 3), nEachInterim[1:3], rseq[1:3], nEachInterim[4], rseq[4], 0.2, 4)
   }
 })[3]
+
 system.time({
-  for (i in 1:100) {
+  for (i in 1:ntry) {
     pet_recursive(1, rep(0, 4), nEachInterim[1:4], rseq[1:4], nEachInterim[5], rseq[5], 0.2, 5)  
   }
 })[3]
