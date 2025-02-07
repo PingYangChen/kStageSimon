@@ -22,11 +22,12 @@ kStageMinMaxObj <- function(particle, nMin, rMin = 0, cliRequirement = NULL) {
   }
   
   nStage <- as.integer(length(particle)/2)
-  nMax <- particle[1]
+  nMaxComputed <- particle[1]
   nPolarized <- particle[2:nStage]
   rProportion <- particle[(nStage + 1):length(particle)]
   
-  result <- kStageFreqCrit(nPolarized, rProportion, nMax, nMin, rMin, cliRequirement)
+  result <- kStageFreqCrit(nPolarized, rProportion, nMaxComputed, nMin, rMin, cliRequirement)
+  nMax <- result$nseq[nStage]
   # Return the objective function value under null hypothesis 
   if ((result$t1e <= t1eThres) & (result$t2e <= t2eThres)) {
     return(result$en/nMax + nMax)
@@ -55,11 +56,11 @@ kStageOptimObj <- function(particle, nMin, rMin = 0, cliRequirement = NULL) {
   }
   
   nStage <- as.integer(length(particle)/2)
-  nMax <- particle[1]
+  nMaxComputed <- particle[1]
   nPolarized <- particle[2:nStage]
   rProportion <- particle[(nStage + 1):length(particle)]
   #
-  result <- kStageFreqCrit(nPolarized, rProportion, nMax, nMin, rMin, cliRequirement)
+  result <- kStageFreqCrit(nPolarized, rProportion, nMaxComputed, nMin, rMin, cliRequirement)
   # Return the expected sample size under null hypothesis 
   if ((result$t1e <= t1eThres) & (result$t2e <= t2eThres)) {
     return(result$en)
