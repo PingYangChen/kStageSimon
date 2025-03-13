@@ -4,6 +4,19 @@ sourceCpp('kstagecli/kStageP2A.cpp')
 
 ### ---------------------------------------------------------------------------
 ### The objective function of the K-stage minimax design
+### --------
+### Inputs
+### --------
+###   - particle      : vector of the form (nMax, nPolarized, rProportion) with sizes (1, nStage - 1, nStage)
+###   - nMin          : integer, or an integer vector with length K(stages) 
+###                     minimal sample size at each stage
+###   - rMin          : integer, or an integer vector with length K(stages) 
+###                     minimal cutoff value of observed responses at each stage
+###   - cliRequirement: list, requirements of the trial including p0, p1, alpha and beta
+### --------
+### Outputs
+### --------
+###   - float, the objective function value of the minimax criterion of the given design
 ### ---------------------------------------------------------------------------
 kStageMinMaxObj <- function(particle, nMin, rMin = 0, cliRequirement = NULL) {
   # particle      : vector of the form (nMax, nPolarized, rProportion) with sizes (1, nStage - 1, nStage)
@@ -38,11 +51,22 @@ kStageMinMaxObj <- function(particle, nMin, rMin = 0, cliRequirement = NULL) {
 
 ### ---------------------------------------------------------------------------
 ### The objective function of the K-stage optimal design
+### --------
+### Inputs
+### --------
+###   - particle      : vector of the form (nMax, nPolarized, rProportion) with sizes (1, nStage - 1, nStage)
+###   - nMin          : integer, or an integer vector with length K(stages) 
+###                     minimal sample size at each stage
+###   - rMin          : integer, or an integer vector with length K(stages) 
+###                     minimal cutoff value of observed responses at each stage
+###   - cliRequirement: list, requirements of the trial including p0, p1, alpha and beta
+### --------
+### Outputs
+### --------
+###   - float, the resulting expected sample size of the given design
 ### ---------------------------------------------------------------------------
 kStageOptimObj <- function(particle, nMin, rMin = 0, cliRequirement = NULL) {
-  # particle      : vector of the form (nMax, nPolarized, rProportion) with sizes (1, nStage - 1, nStage)
-  # nMin          : integer, minimal sample size at each stage
-  # cliRequirement: list, requirements of the trial including p0, p1, alpha and beta
+
   if (is.null(cliRequirement)) {
     p0 <- 0.2
     p1 <- 0.4
@@ -71,7 +95,29 @@ kStageOptimObj <- function(particle, nMin, rMin = 0, cliRequirement = NULL) {
 
 ### ---------------------------------------------------------------------------
 ### The function computing the expected sample size under null hypothesis for 
-###  the input PSO particle 
+### --------
+### Inputs
+### --------
+###   - nPolarized    : vector, the PSO-reparameterized number of patients enrolled at each stage
+###   - rProportion   : vector, the PSO-reparameterized cutoff boundary of observed responses at each stage
+###   - nMax          : float or integer, the PSO-reparameterized maximal sample size of the design
+###                     Note that, the first three inputs form a complete PSO particle,
+###                     the vector of the form (nMax, nPolarized, rProportion) with sizes (1, nStage - 1, nStage)
+###   - nMin          : integer, or an integer vector with length K(stages) 
+###                     minimal sample size at each stage
+###   - rMin          : integer, or an integer vector with length K(stages) 
+###                     minimal cutoff value of observed responses at each stage
+###   - cliRequirement: list, requirements of the trial including p0, p1, alpha and beta
+### --------
+### Outputs
+### --------
+###  A list with items
+###   - nseq: the number of patients enrolled at each stage
+###   - rseq: cutoff boundary of observed responses at each stage
+###   - t1e : Type I error of the given design
+###   - t2e : Type II error of the given design
+###   - en  : Expected sample size of the given design
+###   - pet_seq : The probability of early termination at each stage
 ### ---------------------------------------------------------------------------
 kStageFreqCrit <- function(nPolarized, rProportion, nMax, nMin, rMin = 0, cliRequirement = NULL) {
   

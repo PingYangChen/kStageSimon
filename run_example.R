@@ -67,7 +67,7 @@ optimRes$cputime # computing time
 optimDesign <- kStageFreqCrit(
   nPolarized = optimRes$par[2:nStage],  
   rProportion = optimRes$par[(nStage + 1):length(optimRes$par)], 
-  nMax = optimRes$par[1], nMin = nMinEachInterim, cliRequirement)
+  nMax = optimRes$par[1], nMin = nMinEachInterim, rMin = 0, cliRequirement = cliRequirement)
 
 ### The resulting optimal design
 optimDesign$nseq # Sample sizes at each stage (n_1, ..., n_K)
@@ -97,7 +97,7 @@ minMaxRes$cputime # computing time
 minMaxDesign <- kStageFreqCrit(
   nPolarized = minMaxRes$par[2:nStage], 
   rProportion = minMaxRes$par[(nStage + 1):length(minMaxRes$par)], 
-  nMax = minMaxRes$par[1], nMin = nMinEachInterim, cliRequirement)
+  nMax = minMaxRes$par[1], nMin = nMinEachInterim, rMin = 0, cliRequirement=cliRequirement)
 
 ### The resulting minimax design
 minMaxDesign$nseq # Sample sizes at each stage (n_1, ..., n_K)
