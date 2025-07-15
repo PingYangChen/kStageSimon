@@ -5,11 +5,8 @@
 ### under Simon's frequentist framework
 ### ======================================================== ###
 
-### Install and load the "globpso" package by following the 
-###  instruction in https://github.com/PingYangChen/globpso
-###  Or, uncomment the following two lines and install globpso directly
-#install.packages("devtools")
-#devtools::install_github("PingYangChen/globpso")
+### Install and load the "globpso" package on CRAN
+#install.packages("globpso")
 library(globpso)
 ### Import two local R files "util.R" and "kStageP2A_Objective.R"
 source("util.R")
