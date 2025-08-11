@@ -5,14 +5,20 @@
 ### under Simon's frequentist framework
 ### ======================================================== ###
 
+pkg_need <- c("here", "Rcpp", "RcppArmadillo", "globpso")
+for (i in 1:length(pkg_need)) {
+  if (!(pkg_need[i] %in% rownames(installed.packages()))) {
+    install.packages(pkg_need[i])
+  }
+}
+
+
 ### Install and load the "globpso" package on CRAN
-#install.packages("globpso")
 library(globpso)
 ### Import two local R files "util.R" and "kStageP2A_Objective.R"
 library(here)
 setwd(here::here())
-source("util.R")
-source("kStageP2A_Objective.R")
+source("genKStageDesign.R")
 
 ### Set Requirements of the Clinical Trial
 cliRequirement <- list(
