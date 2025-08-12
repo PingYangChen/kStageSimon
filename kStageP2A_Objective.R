@@ -1,5 +1,7 @@
 library(Rcpp)
 library(RcppArmadillo)
+message("Compiling Cpp functions")
+setwd(here::here())
 sourceCpp('kstagecli/kStageP2A.cpp')
 
 ### ---------------------------------------------------------------------------
