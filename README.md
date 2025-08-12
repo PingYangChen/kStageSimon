@@ -15,7 +15,7 @@ This ZIP file provides a demonstration of using Particle Swarm Optimization (PSO
 
 To get started:
 
-1. Open the included R project file, kStageSimon.Rproj, in RStudio (recommended).
-2. Run the example script run_example.R for a step-by-step demonstration.
+1. Open the included R project file, `kStageSimon.Rproj`, in RStudio (recommended).
+2. Run the example script `run_example.R` for a step-by-step demonstration.
 
 For more details, please refer to the comments and instructions in run_example.R.
