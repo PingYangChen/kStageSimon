@@ -19,7 +19,7 @@ source("kStageP2A_Objective.R")
 #' @param OmegaU The upper bound of the total sample size. 
 #' @param m1 The minimal sample size at the first stage. The default value is `10`.
 #' @param mk The minimal sample size at stages after the first stage. The default value is `1`.
-#' @param qk The minimum incremental critical value at each stage. The default value is `0`.
+#' @param qk The minimum incremental critical value at each stage. It requires `qk <= mk`. The default value is `0`.
 #' @param psoSetting The list of PSO configurations. For example, `list(nSwarm = 32, maxIter = 100)`.
 #' `nSwarm`: The swarm size.
 #' `maxIter`: The number of iterations.
@@ -35,11 +35,16 @@ source("kStageP2A_Objective.R")
 #' \item{$result$pet_seq}{ The probabilities of early termination of the trial at each stage.}
 #' \item{$elapse}{ Computing time.}
 #' }
-genKStageDesign <- function(designType = "optimal", nStage = 3, 
+genKStageDesign <- function(designType = "optimal", nStage = 3L, 
                             cliRequirement = list(p0 = 0.2, p1 = 0.4, alpha = 0.1, beta = 0.1),
-                            OmegaL = 30, OmegaU = 70, m1 = 10, mk = 1, qk = 0,
-                            psoSetting = list(nSwarm = 32, maxIter = 100), 
+                            OmegaL = 30L, OmegaU = 70L, m1 = 10L, mk = 1L, qk = 0L,
+                            psoSetting = list(nSwarm = 32L, maxIter = 100L), 
                             seed = NULL, verbose = TRUE) {
+  
+  ### Check the input arguments
+  stopifnot(nStage %% 1 == 0, m1 %% 1 == 0, mk %% 1 == 0, qk %% 1 == 0, 
+            OmegaU %% 1 == 0, OmegaL %% 1 == 0, 
+            nStage >= 2, m1 >= 0, mk >= 0, mk >= qk, OmegaU >= OmegaL)
   
   ### The range of the total sample size
   nMaxRange <- c(OmegaL, OmegaU)
@@ -66,14 +71,16 @@ genKStageDesign <- function(designType = "optimal", nStage = 3,
     ### Run PSO for finding optimal design
     res <- globpso(objFunc = kStageOptimObj, PSO_INFO = algSetting, 
                    lower = lower, upper = upper, seed = seed, verbose = verbose,
-                   nMin = nMinEachInterim, rMin = qk, cliRequirement = cliRequirement)  
+                   nMin = nMinEachInterim, rMin = c(0, rep(qk, nStage - 1)), 
+                   cliRequirement = cliRequirement)  
 
   } else if (designType == "minimax") {
     
     ### Run PSO for finding minimax design
     res <- globpso(objFunc = kStageMinMaxObj, PSO_INFO = algSetting, 
                    lower = lower, upper = upper, seed = seed, verbose = verbose,
-                   nMin = nMinEachInterim, rMin = qk, cliRequirement = cliRequirement)
+                   nMin = nMinEachInterim, rMin = c(0, rep(qk, nStage - 1)), 
+                   cliRequirement = cliRequirement)
   
   }
   
@@ -81,7 +88,8 @@ genKStageDesign <- function(designType = "optimal", nStage = 3,
   resDesign <- kStageFreqCrit(
     nPolarized = res$par[2:nStage],  
     rProportion = res$par[(nStage + 1):length(res$par)], 
-    nMax = res$par[1], nMin = nMinEachInterim, rMin = qk, cliRequirement = cliRequirement)
+    nMax = res$par[1], nMin = nMinEachInterim, rMin = c(0, rep(qk, nStage - 1)), 
+    cliRequirement = cliRequirement)
   
 
   if (verbose) {

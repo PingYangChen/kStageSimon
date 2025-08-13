@@ -9,10 +9,8 @@ get_cutoff <- function(rProportion, nseq, min_r = 0) {
   stopifnot( (length(min_r) %in% c(1, n_stage)) ) #"length of 'min_r' should be 1 or 'n_stage'"
   nEachInterim <- c(nseq[1], diff(nseq))
   nEachInterimAdj <- nEachInterim - min_r
-  if (any(nEachInterimAdj < 0)) {
-    print(nEachInterimAdj) 
-  }
-  stopifnot(all(nEachInterimAdj >= 0))
+  #if (any(nEachInterimAdj < 0)) { print(nEachInterimAdj) }
+  #stopifnot(all(nEachInterimAdj >= 0))
   rEachInterim <- round(rProportion*nEachInterimAdj) + min_r
   cutoffs <- cumsum(rEachInterim)
   return(cutoffs)

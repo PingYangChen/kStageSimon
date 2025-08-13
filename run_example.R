@@ -36,7 +36,7 @@ optimRes <- genKStageDesign(designType = "optimal", # set "optimal" for searchin
                             m1 = 10,     # the minimal sample size at the first stage
                             mk = 1,      # the minimal sample size at stages after the first stage
                             qk = 0,      # the minimum incremental critical value at each stage
-                            psoSetting = list(nSwarm = 32, maxIter = 100), # the PSO configurations
+                            psoSetting = list(nSwarm = 128, maxIter = 400), # the PSO configurations
                             seed = 1,    # set Random seed for reproducibility
                             verbose = TRUE)
 
@@ -55,7 +55,7 @@ minMaxRes <- genKStageDesign(designType = "minimax", # set "optimal" for searchi
                              m1 = 10,     # the minimal sample size at the first stage
                              mk = 1,      # the minimal sample size at stages after the first stage
                              qk = 0,      # the minimum incremental critical value at each stage
-                             psoSetting = list(nSwarm = 32, maxIter = 100), # the PSO configurations
+                             psoSetting = list(nSwarm = 128, maxIter = 400), # the PSO configurations
                              seed = 1,    # set Random seed for reproducibility
                              verbose = TRUE)
 
